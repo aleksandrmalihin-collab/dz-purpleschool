@@ -11,13 +11,15 @@ func main() {
 	fmt.Scan(&num)
 	fmt.Println("=========Калькулятор расчеты валюты=========")
 	fmt.Println("1 Евро равен", EurTOrub, "рублей.")
-	stdin()
+	a := stdin()
+	fmt.Println(a)
 	nullfunc(num, 20.1, 1000)
 }
 
-func stdin() {
+func stdin() int {
 	var data int
 	fmt.Scan(&data)
+	return data
 }
 
 func nullfunc(number int, cntuer float64, cntrub float64) {
