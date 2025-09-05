@@ -8,12 +8,14 @@ const EurTOrub = usdTORub / usdTOEur
 
 func main() {
 	var num int
+	var valuta1, valuta2 string
+	fmt.Scan(&valuta1, &valuta2)
 	fmt.Scan(&num)
 	fmt.Println("=========Калькулятор расчеты валюты=========")
 	fmt.Println("1 Евро равен", EurTOrub, "рублей.")
 	a := stdin()
 	fmt.Println(a)
-	nullfunc(num, 20.1, 1000)
+	nullfunc(a, valuta1, valuta2)
 }
 
 func stdin() int {
@@ -22,6 +24,6 @@ func stdin() int {
 	return data
 }
 
-func nullfunc(number int, cntuer float64, cntrub float64) {
+func nullfunc(amount int, fromCurrency string, toCurrency string) {
 
 }
