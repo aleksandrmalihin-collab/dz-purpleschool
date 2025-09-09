@@ -2,70 +2,67 @@ package main
 
 import (
 	"fmt"
+	"sort"
+	"strconv"
+	"strings"
 )
 
-const usdToRub = 79.1
-const usdToEur = 0.85
-const eurToRub = 85.1
-const eurToUsd = 1.17
-const rubToUsd = 0.012
-const rubToEur = 0.010
-
 func main() {
-	sourceСurrency := validateCurrency()
-	amount := validateAmount()
-	targetCurrency := validateCurrency()
-	result := convertCurrency(sourceСurrency, amount, targetCurrency)
-	fmt.Printf("%.2f %s = %.2f %s\n", amount, sourceСurrency, result, targetCurrency)
+	var input string
+	fmt.Println("Введите числа через запятую без пробелов!")
+	fmt.Scan(&input)
+	convertedInput := converterInputToInt(input)
+	myResult := operation(convertedInput)
+	fmt.Println("Мой итоговый результат:", myResult)
 }
 
-func validateCurrency() string {
-	var currency string
-	fmt.Println("Доступны валюты: USD, RUB, EUR")
-	for {
-		fmt.Scan(&currency)
-		if currency != "USD" && currency != "RUB" && currency != "EUR" {
-			fmt.Println("Ошибка! Введите USD, EUR или RUB:")
-			continue
-		}
-		return currency
-	}
-}
-
-func validateAmount() float64 {
-	var amount float64
-	for {
-		fmt.Println("Введите число")
-		_, err := fmt.Scan(&amount)
+func converterInputToInt(input string) []float64 {
+	var numbers []float64
+	parts := strings.Split(input, ",")
+	for _, p := range parts {
+		p = strings.TrimSpace(p)
+		num, err := strconv.Atoi(p)
 		if err != nil {
-			fmt.Println("Ошибка! Введен неверный формат")
+			fmt.Println("Ошибка конвертации строки!", err)
 			continue
 		}
-		if amount < 0 {
-			fmt.Println("Число не может быть меньше нуля")
-			continue
-		}
-		return amount
+		numbers = append(numbers, float64(num))
 	}
+	return numbers
 }
 
-func convertCurrency(sourceСurrency string, amount float64, targetCurrency string) float64 {
-	var result float64
-	switch {
-	case sourceСurrency == "USD" && targetCurrency == "RUB":
-		result = amount * usdToRub
-	case sourceСurrency == "USD" && targetCurrency == "EUR":
-		result = amount * usdToEur
-	case sourceСurrency == "EUR" && targetCurrency == "USD":
-		result = amount * eurToUsd
-	case sourceСurrency == "EUR" && targetCurrency == "RUB":
-		result = amount * eurToRub
-	case sourceСurrency == "RUB" && targetCurrency == "EUR":
-		result = amount * rubToEur
-	case sourceСurrency == "RUB" && targetCurrency == "USD":
-		result = amount * rubToUsd
-	default:
-		result = amount
+func operation(numbers []float64) float64 {
+	var userChoice string
+	summ := 0.0
+	result := 0.0
+	for {
+		fmt.Println("Выберите операцию из предложенных: AVG, SUM, MED")
+		fmt.Scan(&userChoice)
+		switch {
+		case userChoice == "AVG":
+			for i := 0; i < len(numbers); i++ {
+				summ += float64(numbers[i])
+			}
+			result = summ / float64(len(numbers))
+
+		case userChoice == "SUM":
+			for i := 0; i < len(numbers); i++ {
+				summ += float64(numbers[i])
+			}
+			result = summ
+
+		case userChoice == "MED":
+			sort.Float64s(numbers)
+			if len(numbers)%2 == 1 {
+				result = float64(numbers[len(numbers)/2])
+			} else {
+				result = (float64(numbers[len(numbers)/2]) + float64(numbers[len(numbers)/2-1])) / 2.0
+			}
+
+		default:
+			fmt.Println("Неверная операция. Введите заново!")
+			continue
+		}
+		return result
 	}
-	return result
 }
