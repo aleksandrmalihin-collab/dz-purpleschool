@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 func main() {
 	var input string
-	input = "10,20,30,40,50"
+	fmt.Println("Введите числа через запятую без пробелов!")
+	fmt.Scan(&input)
 	convertedInput := converterInputToInt(input)
 	myResult := operation(convertedInput)
 	fmt.Println("Мой итоговый результат:", myResult)
@@ -50,6 +52,7 @@ func operation(numbers []float64) float64 {
 			result = summ
 
 		case userChoice == "MED":
+			sort.Float64s(numbers)
 			if len(numbers)%2 == 1 {
 				result = float64(numbers[len(numbers)/2])
 			} else {
