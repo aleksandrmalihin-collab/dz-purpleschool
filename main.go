@@ -4,12 +4,12 @@ import "fmt"
 
 func main() {
 	mapCurrency := map[string]float64{
-		"usdToRub": 79.1,
-		"usdToEur": 0.85,
-		"eurToRub": 85.1,
-		"eurToUsd": 1.17,
-		"rubToUsd": 0.012,
-		"rubToEur": 0.010,
+		"USDTORUB": 79.1,
+		"USDTOEUR": 0.85,
+		"EURTORUB": 85.1,
+		"EURTOUSD": 1.17,
+		"RUBTOUSD": 0.012,
+		"RUBTOEUR": 0.010,
 	}
 	sourceСurrency := validateCurrency()
 	amount := validateAmount()
@@ -47,23 +47,16 @@ func validateAmount() float64 {
 		return amount
 	}
 }
-func convertCurrency(sourceСurrency string, amount float64, targetCurrency string, mapCurrency map[string]float64) float64 {
-	var result float64
-	switch {
-	case sourceСurrency == "USD" && targetCurrency == "RUB":
-		result = amount * mapCurrency["usdToRub"]
-	case sourceСurrency == "USD" && targetCurrency == "EUR":
-		result = amount * mapCurrency["usdToEur"]
-	case sourceСurrency == "EUR" && targetCurrency == "USD":
-		result = amount * mapCurrency["eurToUsd"]
-	case sourceСurrency == "EUR" && targetCurrency == "RUB":
-		result = amount * mapCurrency["eurToRub"]
-	case sourceСurrency == "RUB" && targetCurrency == "EUR":
-		result = amount * mapCurrency["rubToEur"]
-	case sourceСurrency == "RUB" && targetCurrency == "USD":
-		result = amount * mapCurrency["rubToUsd"]
-	default:
-		result = amount
+
+func convertCurrency(sourceCurrency string, amount float64, targetCurrency string, mapCurrency map[string]float64) float64 {
+	if sourceCurrency == targetCurrency {
+		return amount
 	}
-	return result
+
+	key := sourceCurrency + "TO" + targetCurrency
+	if rate, exists := mapCurrency[key]; exists {
+		return amount * rate
+	}
+
+	return amount // fallback для неподдерживаемых пар
 }
