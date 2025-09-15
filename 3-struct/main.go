@@ -15,6 +15,10 @@ type Bin struct {
 	name      string
 }
 
+type Binlist struct {
+	Bin
+}
+
 func (b *Bin) generatePrivate() bool {
 	b.private = status[rand.IntN(2)]
 	return b.private
@@ -41,6 +45,27 @@ func createBin(id string, private *bool, name string) (*Bin, error) {
 
 }
 
+func createBinList(id string, private *bool, name string) (*Binlist, error) {
+	if name == "" {
+		return nil, errors.New("INVALID_NAME")
+	}
+	if id == "" {
+		return nil, errors.New("INVALID_ID")
+	}
+	newBin := &Binlist{
+		Bin: Bin{id: id,
+			createdAt: time.Now(),
+			name:      name},
+	}
+	if private == nil {
+		newBin.generatePrivate()
+	} else {
+		newBin.private = *private
+	}
+	return newBin, nil
+
+}
+
 var status = map[int]bool{
 	0: true,
 	1: false,
@@ -56,7 +81,14 @@ func main() {
 		fmt.Println("Неверное имя или id!")
 		return
 	}
+
+	binlist1, err := createBinList(id, private, name)
+	if err != nil {
+		fmt.Println("Неверное имя или id!")
+		return
+	}
 	fmt.Println(*bin1)
+	fmt.Println(*binlist1)
 }
 
 func promtDataToBin(prompt string) string {
@@ -73,7 +105,7 @@ func promtStatus(prompt string) *bool {
 
 	s = strings.TrimSpace(strings.ToLower(s))
 	if s == "" {
-		return nil // пользователь ничего не ввёл
+		return nil
 	}
 	v := s == "true" || s == "t" || s == "1" || s == "yes" || s == "y"
 	return &v
