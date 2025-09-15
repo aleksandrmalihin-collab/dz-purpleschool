@@ -14,7 +14,7 @@ func main() {
 	sourceСurrency := validateCurrency()
 	amount := validateAmount()
 	targetCurrency := validateCurrency()
-	result := convertCurrency(sourceСurrency, amount, targetCurrency, mapCurrency)
+	result := convertCurrency(sourceСurrency, amount, targetCurrency, &mapCurrency)
 	fmt.Printf("%.2f %s = %.2f %s\n", amount, sourceСurrency, result, targetCurrency)
 }
 
@@ -30,7 +30,6 @@ func validateCurrency() string {
 		return currency
 	}
 }
-
 func validateAmount() float64 {
 	var amount float64
 	for {
@@ -47,16 +46,13 @@ func validateAmount() float64 {
 		return amount
 	}
 }
-
-func convertCurrency(sourceCurrency string, amount float64, targetCurrency string, mapCurrency map[string]float64) float64 {
+func convertCurrency(sourceCurrency string, amount float64, targetCurrency string, mapCurrency *map[string]float64) float64 {
 	if sourceCurrency == targetCurrency {
 		return amount
 	}
-
 	key := sourceCurrency + "TO" + targetCurrency
-	if rate, exists := mapCurrency[key]; exists {
+	if rate, exists := (*mapCurrency)[key]; exists {
 		return amount * rate
 	}
-
-	return amount // fallback для неподдерживаемых пар
+	return amount
 }
