@@ -1,94 +1,37 @@
 package main
 
 import (
-	"errors"
+	"3-struct/api"
+	"3-struct/bins"
+	"3-struct/file"
+	"3-struct/storage"
 	"fmt"
-	"math/rand/v2"
 	"strings"
-	"time"
 )
-
-type Bin struct {
-	id        string
-	private   bool
-	createdAt time.Time
-	name      string
-}
-
-type Binlist struct {
-	Bin
-}
-
-func (b *Bin) generatePrivate() bool {
-	b.private = status[rand.IntN(2)]
-	return b.private
-}
-
-func createBin(id string, private *bool, name string) (*Bin, error) {
-	if name == "" {
-		return nil, errors.New("INVALID_NAME")
-	}
-	if id == "" {
-		return nil, errors.New("INVALID_ID")
-	}
-	newBin := &Bin{
-		id:        id,
-		createdAt: time.Now(),
-		name:      name,
-	}
-	if private == nil {
-		newBin.generatePrivate()
-	} else {
-		newBin.private = *private
-	}
-	return newBin, nil
-
-}
-
-func createBinList(id string, private *bool, name string) (*Binlist, error) {
-	if name == "" {
-		return nil, errors.New("INVALID_NAME")
-	}
-	if id == "" {
-		return nil, errors.New("INVALID_ID")
-	}
-	newBin := &Binlist{
-		Bin: Bin{id: id,
-			createdAt: time.Now(),
-			name:      name},
-	}
-	if private == nil {
-		newBin.generatePrivate()
-	} else {
-		newBin.private = *private
-	}
-	return newBin, nil
-
-}
-
-var status = map[int]bool{
-	0: true,
-	1: false,
-}
 
 func main() {
 
 	id := promtDataToBin("Введите id: ")
 	name := promtDataToBin("Введите имя: ")
 	private := promtStatus("Введите статус true/false: ")
-	bin1, err := createBin(id, private, name)
+	bin1, err := bins.CreateBin(id, private, name)
 	if err != nil {
 		fmt.Println("Неверное имя или id!")
 		return
 	}
 
-	binlist1, err := createBinList(id, private, name)
+	binlist1, err := bins.CreateBinList(id, private, name)
 	if err != nil {
 		fmt.Println("Неверное имя или id!")
 		return
 	}
 	fmt.Println(*bin1)
 	fmt.Println(*binlist1)
+
+	api.JsonForBin()
+	file.ReadFile()
+	file.WriteFile()
+	storage.Store()
 }
 
 func promtDataToBin(prompt string) string {
